@@ -9,6 +9,11 @@ from collections import defaultdict
 class Player(simple_player.Player):
     def utility(self, state):
         def get_piece_count(state):
+            """
+            The function returns dictionary of tools with key as their type
+            :param state: GameState
+            :return: dictionary
+            """
             piece_counts = defaultdict(lambda: [])
             for idx, (key, value) in enumerate(state.board.items()):
                 if value != EM:
