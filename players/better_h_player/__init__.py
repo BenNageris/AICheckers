@@ -34,6 +34,7 @@ class Player(simple_player.Player):
                 my_u = my_u + ((BOARD_ROWS - j) + 5)
             num_pieces = num_pieces + 1
         for pawn_location in piece_counts[KING_COLOR[self.color]]:
+            i, j = pawn_location
             if self.color == RED_PLAYER:
                 my_u = my_u + 13
             else:
@@ -47,6 +48,7 @@ class Player(simple_player.Player):
                 op_u = op_u + ((BOARD_ROWS - j) + 5)
             num_pieces = num_pieces + 1
         for pawn_location in piece_counts[KING_COLOR[opponent_color]]:
+            i, j = pawn_location
             if self.color == RED_PLAYER:
                 op_u = op_u + 13
             else:
@@ -59,7 +61,7 @@ class Player(simple_player.Player):
             # The opponent has no tools left
             return INFINITY
         else:
-            return (my_u - op_u) / float(num_pieces)
+            return my_u - op_u
 
     def __repr__(self):
         return '{} {}'.format(abstract.AbstractPlayer.__repr__(self), 'better_h_player')
