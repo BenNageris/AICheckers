@@ -1,36 +1,34 @@
-import os
-import sys
-
 import csv
 
 import run_game
-from checkers.consts import BLACK_PLAYER, RED_PLAYER
+from checkers.consts import RED_PLAYER
 
-LOSE_SCORE = 0
+T = ['2', '10', '50']
+LOSING_SCORE = 0
 TIE_SCORE = 0.5
-WIN_SCORE = 1
+WINNING_SCORE = 1
 
 
-def run(times, players_names, result_file_name):
-    # Args for runner
-    # 0: setup_time, 1: round_time, 2: k, 3: verbose, 4: Player1, 5: Player2
+def run(players_names):
+    # args contains 5 arguments:
+    # setup_time, round_time, k, verbose, player1, player2
+    # player1 and player2 will insert to args while execution the experiments.
     args = ['2', '', '5', 'n', '', '']
 
     # Create each match
-    dous = []
+    rivals = []
     for i in range(len(players_names) - 1):
         for j in range(i + 1, len(players_names)):
-            dous.append((players_names[i], players_names[j]))  # P1 vs P2
-            dous.append((players_names[j], players_names[i]))  # P2 vs P1
+            rivals.append((players_names[i], players_names[j]))
+            rivals.append((players_names[j], players_names[i]))
+    print(rivals)
 
-    # Store all results to update file on the run
-    results = [['TEST START']]
-
+    results = []
     experiments_counter = 0
-    # Iterate times per round
-    for t in times:
+    # Iterate T per round
+    for t in T:
         args[1] = t
-        for player1, player2 in dous:
+        for player1, player2 in rivals:
             experiments_counter += 1
             print(f'Experiment #{experiments_counter}:')
             # FIRST GAME: player 1 starts
@@ -39,26 +37,22 @@ def run(times, players_names, result_file_name):
             winner = runner.run()
 
             match_result = [player1, player2, t]
-
             if winner == run_game.TIE:
                 match_result.extend([TIE_SCORE, TIE_SCORE])
             elif winner[0] == RED_PLAYER:
-                match_result.extend([WIN_SCORE, LOSE_SCORE])
+                match_result.extend([WINNING_SCORE, LOSING_SCORE])
             else:
-                match_result.extend([LOSE_SCORE, WIN_SCORE])
+                match_result.extend([LOSING_SCORE, WINNING_SCORE])
             results.append(match_result)
 
             print(f'current result: {match_result}')
 
-            with open('experiments.csv', 'w', newline='') as csvfile:
-                writer = csv.writer(csvfile)
-                for row, result in enumerate(results):
-                    for col, field in enumerate(result):
-                        writer.writerow([row, col, field])
+    with open('experiments.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        for match in results:
+            writer.writerow(match)
 
 
 if __name__ == '__main__':
-    T = ['2', '10', '50']
-    result_file = 'results'
-    players = ['simple_player', 'better_h_player', 'improved_player', 'improved_better_h_player']
-    run(T, players, result_file)
+    players_list = ['simple_player', 'improved_player']  # ['simple_player', 'better_h_player', 'improved_player', 'improved_better_h_player']
+    run(players_list)
