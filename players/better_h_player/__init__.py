@@ -117,7 +117,8 @@ class Player(simple_player.Player):
         sum_of_dist = 0
         opponent_color = OPPONENT_COLOR[self.color]
         for player_location in piece_counts[KING_COLOR[self.color]]:
-            for opponent_location in piece_counts[PAWN_COLOR[opponent_color]] + piece_counts[KING_COLOR[opponent_color]]:
+            for opponent_location in piece_counts[PAWN_COLOR[opponent_color]] + piece_counts[
+                KING_COLOR[opponent_color]]:
                 distance = distance_calculation(player_location[0], player_location[1], opponent_location[0],
                                                 opponent_location[1])
                 sum_of_dist += abs(BOARD_ROWS - 1 - distance) * 4
