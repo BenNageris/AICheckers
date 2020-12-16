@@ -23,7 +23,7 @@ KING_WEIGHT = 1.5
 # Player
 # ===============================================================================
 
-class Player(simple_player.Player):
+class Player(abstract.AbstractPlayer):
     def __init__(self, setup_time, player_color, time_per_k_turns, k):
         abstract.AbstractPlayer.__init__(self, setup_time, player_color, time_per_k_turns, k)
         self.clock = time.process_time()
