@@ -10,3 +10,9 @@ simple_player,better_player,10,0,1
 better_player,simple_player,10,1,0
 simple_player,better_player,50,1,0
 better_player,simple_player,50,0.5,0.5
+improved_player,better_player,2,0.5,0.5
+better_player,improved_player,2,1,0
+improved_player,better_player,10,0.5,0.5
+better_player,improved_player,10,0.5,0.5
+improved_player,better_player,50,0.5,0.5
+better_player,improved_player,50,1,0
