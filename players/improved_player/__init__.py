@@ -1,11 +1,14 @@
 # ===============================================================================
 # Imports
 # ===============================================================================
+import time
 
 import abstract
+import players.simple_player as simple_player
+from checkers.consts import RED_PLAYER, BLACK_PLAYER, BOARD_ROWS, BOARD_COLS
 from utils import MiniMaxWithAlphaBetaPruning, INFINITY, run_with_limited_time, ExceededTimeError
+import abstract
 from checkers.consts import EM, PAWN_COLOR, KING_COLOR, OPPONENT_COLOR, MAX_TURNS_NO_JUMP
-import time
 from collections import defaultdict
 
 # ===============================================================================
@@ -20,7 +23,7 @@ KING_WEIGHT = 1.5
 # Player
 # ===============================================================================
 
-class Player(abstract.AbstractPlayer):
+class Player(simple_player.Player):
     def __init__(self, setup_time, player_color, time_per_k_turns, k):
         abstract.AbstractPlayer.__init__(self, setup_time, player_color, time_per_k_turns, k)
         self.clock = time.process_time()
@@ -29,11 +32,21 @@ class Player(abstract.AbstractPlayer):
         # Taking a spare time of 0.05 seconds.
         self.turns_remaining_in_round = self.k
         self.time_remaining_in_round = self.time_per_k_turns
-        self.time_for_current_move = self.time_remaining_in_round / self.turns_remaining_in_round - 0.05
+        if self.k <= 2:
+            self.time_for_current_move = self.time_remaining_in_round / self.turns_remaining_in_round - 0.05
+        else:
+            self.time_divider = 2
+            self.time_for_current_move = self.time_remaining_in_round / self.time_divider
 
     def get_move(self, game_state, possible_moves):
         self.clock = time.process_time()
-        self.time_for_current_move = self.time_remaining_in_round / self.turns_remaining_in_round - 0.05
+
+        if self.k <= 2:
+            self.time_for_current_move = self.time_remaining_in_round / self.turns_remaining_in_round - 0.05
+        else:
+            self.time_divider += 1
+            self.time_for_current_move = self.time_remaining_in_round / self.time_divider
+
         if len(possible_moves) == 1:
             return possible_moves[0]
 
@@ -123,6 +136,4 @@ class Player(abstract.AbstractPlayer):
         return (time.process_time() - self.clock) >= self.time_for_current_move
 
     def __repr__(self):
-        return '{} {}'.format(abstract.AbstractPlayer.__repr__(self), 'simple')
-
-# c:\python35\python.exe run_game.py 3 3 3 y simple_player random_player
+        return '{} {}'.format(abstract.AbstractPlayer.__repr__(self), 'improved')
